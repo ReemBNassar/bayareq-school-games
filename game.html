@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>مغامرة العصفور والبلبل - الحرية أجمل</title>
+    <!-- مكتبة القصاصات الورقية Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Changa', 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 12px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 480px;
+            padding: 20px 15px;
+            text-align: center;
+            border: 5px solid #FFD166;
+            position: relative;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .title-badge {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            display: inline-block;
+            margin-bottom: 12px;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .welcome-box {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .name-input {
+            width: 100%;
+            max-width: 320px;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border: 3px solid #6C5CE7;
+            border-radius: 20px;
+            outline: none;
+            text-align: center;
+            font-weight: bold;
+            color: #2B2D42;
+            background: #FFF9A6;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .name-input:focus {
+            border-color: #FF007F;
+            transform: scale(1.02);
+        }
+
+        .gender-selector {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .gender-btn {
+            flex: 1;
+            padding: 10px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            border: 3px solid #E9ECEF;
+            border-radius: 18px;
+            background: #F8F9FA;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .gender-btn.selected-male {
+            border-color: #118AB2;
+            background: #E0F7FA;
+            color: #0077B6;
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(17, 138, 178, 0.2);
+        }
+
+        .gender-btn.selected-female {
+            border-color: #FF007F;
+            background: #FFE4E6;
+            color: #D63384;
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(255, 0, 127, 0.2);
+        }
+
+        .avatar-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .avatar-option {
+            font-size: 2rem;
+            padding: 6px;
+            border: 3px solid transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #F1F2F6;
+        }
+
+        .avatar-option.selected {
+            border-color: #FF007F;
+            background: #FFEAA7;
+            transform: scale(1.15);
+        }
+
+        .progress-container {
+            background-color: #E9ECEF;
+            border-radius: 20px;
+            height: 16px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 2px solid #FFF;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            display: none;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #06D6A0, #118AB2);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 20px;
+        }
+
+        .hero-avatar {
+            font-size: 3.5rem;
+            margin: 5px 0;
+            animation: bounce 2s infinite;
+            display: inline-block;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        .story-bubble {
+            background: #FFF9A6;
+            border: 3px dashed #FFB703;
+            border-radius: 20px;
+            padding: 12px 15px;
+            font-size: 1.05rem;
+            color: #2B2D42;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            font-weight: 700;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+            width: 100%;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #6C5CE7;
+            margin-bottom: 15px;
+            text-shadow: 0 1px 0 #FFF;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .choice-btn {
+            background: linear-gradient(145deg, #A29BFE, #6C5CE7);
+            color: white;
+            border: none;
+            padding: 14px 16px;
+            font-size: 1rem;
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 800;
+            box-shadow: 0 6px 0 #4834D4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .choice-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #4834D4;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #06D6A0, #118AB2);
+            box-shadow: 0 6px 0 #008F68;
+            font-size: 1.25rem;
+            margin-top: 5px;
+        }
+
+        .party-btn {
+            background: linear-gradient(45deg, #FF007F, #FF5E00);
+            box-shadow: 0 6px 0 #99004C;
+            font-size: 1.1rem;
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.04);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .feedback-area {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            min-height: 35px;
+        }
+
+        .pop-in {
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        #game-body {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="game-card">
+        <div class="title-badge">✨ رحلة العصفور والبلبل ✨</div>
+
+        <div class="progress-container" id="progress-container">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+
+        <div id="game-body">
+            <!-- الواجهة الافتتاحية -->
+            <div class="welcome-box" id="welcome-screen">
+                <div class="hero-avatar">🐣🎈</div>
+                <div class="story-bubble" style="background: #E8F5E9; border-color: #2E7D32;">
+                    أهلاً بك في اللعبة التفاعلية!<br>
+                    جاهز لمساعدة العصفور واكتشاف السر؟
+                </div>
+
+                <p style="font-weight: 800; color: #6C5CE7; margin: 0;">اكتب اسمك الرائع هنا 👇</p>
+                <input type="text" id="player-name" class="name-input" placeholder="اسمك يا بطلنا..." maxlength="15">
+
+                <p style="font-weight: 800; color: #6C5CE7; margin: 0;">هل أنت ولد أم بنت؟ 👦👧</p>
+                <div class="gender-selector">
+                    <button type="button" class="gender-btn selected-male" id="btn-male"
+                        onclick="selectGender('male')">👦 ولد</button>
+                    <button type="button" class="gender-btn" id="btn-female" onclick="selectGender('female')">👧
+                        بنت</button>
+                </div>
+
+                <p style="font-weight: 800; color: #6C5CE7; margin: 0;">اختر رمزك المفضّل 🌟</p>
+                <div class="avatar-selector">
+                    <span class="avatar-option selected" onclick="selectAvatar(this, '🚀')">🚀</span>
+                    <span class="avatar-option" onclick="selectAvatar(this, '👑')">👑</span>
+                    <span class="avatar-option" onclick="selectAvatar(this, '⭐')">⭐</span>
+                    <span class="avatar-option" onclick="selectAvatar(this, '🦁')">🦁</span>
+                </div>
+
+                <button class="choice-btn start-btn" onclick="startGame()">ابدأ المغامرة الآن! 🎮</button>
+                <div class="feedback-area" id="welcome-feedback"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let playerName = "";
+        let playerAvatar = "🚀";
+        let playerGender = "male"; // الافتراضي ذكر
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSuccessSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.exponentialRampToValueAtTime(880, now + 0.3);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.3);
+        }
+
+        function playErrorSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(220, now);
+            osc.frequency.linearRampToValueAtTime(110, now + 0.25);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.25);
+        }
+
+        function selectGender(gender) {
+            playerGender = gender;
+            const btnMale = document.getElementById("btn-male");
+            const btnFemale = document.getElementById("btn-female");
+
+            if (gender === 'male') {
+                btnMale.className = "gender-btn selected-male";
+                btnFemale.className = "gender-btn";
+            } else {
+                btnFemale.className = "gender-btn selected-female";
+                btnMale.className = "gender-btn";
+            }
+        }
+
+        function selectAvatar(element, avatar) {
+            document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            playerAvatar = avatar;
+        }
+
+        function startGame() {
+            const input = document.getElementById("player-name");
+            playerName = input.value.trim();
+
+            if (playerName === "") {
+                playErrorSound();
+                const feedback = document.getElementById("welcome-feedback");
+                feedback.style.color = "#FF007F";
+                feedback.innerText = playerGender === "female" ? "❌ من فضلك اكتبي اسمكِ أولاً يا بطلة!" : "❌ من فضلك اكتب اسمك أولاً يا بطل!";
+                return;
+            }
+
+            playSuccessSound();
+            triggerCenterConfetti();
+
+            document.getElementById("progress-container").style.display = "block";
+            loadStep();
+        }
+
+        const gameData = [
+            {
+                avatar: "🔍🐤",
+                story: "العصفور الصغير يشعر بالجوع والعطش الشديدين! أخذ يطير بعيداً يبحث عن الأكل والماء...",
+                question: "وفجأة! ماذا وجد العصفور فوق شرفة إحدى البنايات؟",
+                options: [
+                    {text: "بلبلاً جميلًا في قفص أمامه أكل كثير 🦜", correct: true},
+                    {text: "عشاً كبيراً فيه طعام وفير 🪹", correct: false},
+                    {text: "بركة ماء واسعة يلعب فيها 🌊", correct: false}
+                ],
+                rewardMale: "بطل! إجابة ذكية وممتازة 🌟",
+                rewardFemale: "بطلة! إجابة ذكية وممتازة 🌟"
+            },
+            {
+                avatar: "😮🏠",
+                story: "اقترب العصفور ورأى البلبل يأكل ويشرب داخل قفصه الجميل وبكل أمان...",
+                question: "ماذا قال العصفور بشغف للبلبل؟",
+                options: [
+                    {text: "«ما أجمل حياتك هنا أيها البلبل!» 🤩", correct: true},
+                    {text: "«أعطني القليل من طعامك» 🌾", correct: false},
+                    {text: "«لماذا تعيش وحدك؟» 🤔", correct: false}
+                ],
+                rewardMale: "يا سلام عليك! ملاحظة رائعة 🎈",
+                rewardFemale: "يا سلام عليكِ! ملاحظة رائعة 🎈"
+            },
+            {
+                avatar: "😢籠",
+                story: "بالرغم من كل هذا الطعام الشهير والماء والقفص الذهبي، كان البلبل حزيناً جداً...",
+                question: "لماذا يا ترى كان البلبل حزيناً وسجيناً؟",
+                options: [
+                    {text: "لأنه لا يستطيع الطيران الخروج من القفص 💔", correct: true},
+                    {text: "لأن القفص كان صغيراً جداً 🏠", correct: false},
+                    {text: "لأنه لم يحب الطعام الموجود 🍎", correct: false}
+                ],
+                rewardMale: "أنت بطل ذكي وتشعر بالآخرين! 💖",
+                rewardFemale: "أنتِ بطلة ذكية وتشعرين بالآخرين! 💖"
+            },
+            {
+                avatar: "🕊️✨",
+                story: "قال البلبل: «أنا مسجون ولا أستطيع الخروج...» ثم أخبرنا بالحكمة الكبرى!",
+                question: "ما هي الحكمة العظيمة التي علمها البلبل للعصفور؟",
+                options: [
+                    {text: "«الحُرِّيَّةُ هِيَ الأَجْمَلُ يَا صَدِيقِي» 🕊️🌈", correct: true},
+                    {text: "«القفص الذهبي أجمل مكان» 🏰", correct: false},
+                    {text: "«الأكل الكثير يجعلك سعيداً» 🍔", correct: false}
+                ],
+                rewardMale: "مذهل جداً! تعلمت أجمل درس في الحياة 🏆",
+                rewardFemale: "مذهلة جداً! تعلمتِ أجمل درس في الحياة 🏆"
+            }
+        ];
+
+        let currentStep = 0;
+
+        function triggerCenterConfetti() {
+            const duration = 2 * 1000;
+            const animationEnd = Date.now() + duration;
+
+            const interval = setInterval(function () {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+
+                confetti({
+                    particleCount: 35,
+                    startVelocity: 35,
+                    spread: 360,
+                    origin: {x: 0.5, y: 0.5},
+                    colors: ['#FF007F', '#FFD166', '#06D6A0', '#118AB2', '#FF6B6B']
+                });
+            }, 180);
+        }
+
+        function loadStep() {
+            const data = gameData[currentStep];
+            const gameBody = document.getElementById("game-body");
+
+            const progressPercent = ((currentStep + 1) / gameData.length) * 100;
+            document.getElementById("progress").style.width = progressPercent + "%";
+
+            gameBody.innerHTML = `
+            <div class="hero-avatar">${data.avatar}</div>
+            <div class="story-bubble">${data.story}</div>
+            <div class="question-text">${data.question}</div>
+            <div class="options-grid" id="options"></div>
+            <div class="feedback-area" id="feedback"></div>
+        `;
+
+            const optionsContainer = document.getElementById("options");
+
+            data.options.forEach(option => {
+                const btn = document.createElement("button");
+                btn.className = "choice-btn";
+                btn.innerText = option.text;
+                const rewardMsg = playerGender === "female" ? data.rewardFemale : data.rewardMale;
+                btn.onclick = () => checkAnswer(option.correct, rewardMsg);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(isCorrect, rewardMessage) {
+            const feedbackDiv = document.getElementById("feedback");
+            if (isCorrect) {
+                playSuccessSound();
+                triggerCenterConfetti();
+                feedbackDiv.style.color = "#06D6A0";
+                feedbackDiv.className = "feedback-area pop-in";
+                feedbackDiv.innerText = `${rewardMessage} يا ${playerName}!`;
+
+                setTimeout(() => {
+                    currentStep++;
+                    if (currentStep < gameData.length) {
+                        loadStep();
+                    } else {
+                        showEndScreen();
+                    }
+                }, 2200);
+            } else {
+                playErrorSound();
+                feedbackDiv.style.color = "#FF007F";
+                feedbackDiv.className = "feedback-area pop-in";
+
+                const errorMsg = playerGender === "female"
+                    ? `❌ حاولي مجدداً يا ${playerName}! أنتِ تستطيعين!`
+                    : `❌ حاول مجدداً يا ${playerName}! أنت تستطيع!`;
+
+                feedbackDiv.innerText = errorMsg;
+            }
+        }
+
+        function showEndScreen() {
+            playSuccessSound();
+            triggerCenterConfetti();
+            const gameBody = document.getElementById("game-body");
+
+            const titleText = playerGender === "female" ? `🎉 ${playerAvatar} بطلة الحُرّية الحقيقية! 🎉` : `🎉 ${playerAvatar} بطل الحُرّية الحقيقي! 🎉`;
+            const helpText = playerGender === "female" ? `ساعدتِ البلبل والعصفور وتعلّمتِ الدرس العظيم:` : `ساعدت البلبل والعصفور وتعلّمت الدرس العظيم:`;
+
+            gameBody.innerHTML = `
+            <div class="hero-avatar">🥳🕊️👑</div>
+            <h2 style="color: #6C5CE7; font-size: 1.4rem; margin: 10px 0;">${titleText}</h2>
+            <div class="story-bubble" style="background: #E8F5E9; border-color: #2E7D32;">
+                مبارك يا ${playerName}! ${helpText}<br>
+                <span style="color: #FF007F; font-size: 1.3rem; font-weight: 900;">« الحُرِّيَّةُ هِيَ الأَجْمَلُ »</span>
+            </div>
+            
+            <div class="options-grid" style="margin-top: 10px;">
+                <button class="choice-btn party-btn" onclick="triggerCenterConfetti(); playSuccessSound();">احتفل مع العصفور و البلبل باطلاق المفرقعات 🥳🎊</button>
+                <button class="choice-btn" style="background: linear-gradient(145deg, #FFB703, #FB8500); box-shadow: 0 6px 0 #D00000;" onclick="location.reload()">العب اللعبة من جديد 🔄</button>
+            </div>
+        `;
+        }
+    </script>
+
+</body>
+
+</html>
