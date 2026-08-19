@@ -355,6 +355,7 @@
             document.getElementById("story-text").innerHTML = "🎉 نهاية القصة الرائعة!<br>« الحُرِّيَّةُ هِيَ الأَجْمَلُ » 🕊️<br>";
 
             const controls = document.getElementById("controls-container");
+            controls.style.display = "flex";
             controls.innerHTML = "";
 
 
@@ -371,7 +372,7 @@
         function restartStory() {
             birdAudio.pause();
             const controls = document.getElementById("controls-container");
-            controls.innerHTML = `<button class="choice-btn" onclick="startStory()" id="play-btn">إيقاف مؤقت ⏸</button>`;
+
 
             isPlaying = true;
             currentIndex = 0;
@@ -398,32 +399,18 @@
         }
 
         function startStory() {
-            const btn = document.getElementById("play-btn");
-
             birdAudio.load();
+            isPlaying = true;
 
-            if (!isPlaying) {
-                isPlaying = true;
-                btn.innerText = "إيقاف مؤقت ⏸";
+            document.getElementById("controls-container").style.display = "none";
 
-                if (currentIndex === 0 && (!audioPlayer.src || audioPlayer.src === "")) {
-                    audioPlayer.src = "ممتاز.mp3";
-                    audioPlayer.currentTime = 0;
-                }
-                audioPlayer.play().catch(() => { });
-
-                playScene();
-            } else {
-                isPlaying = false;
-                clearTimeout(storyTimer);
-                btn.innerText = "متابعة ▶";
-
-                audioPlayer.pause();
-                birdAudio.pause();
-
-                const activeVideo = mediaContainer.querySelector("video");
-                if (activeVideo) activeVideo.pause();
+            if (currentIndex === 0 && (!audioPlayer.src || audioPlayer.src === "")) {
+                audioPlayer.src = "ممتاز.mp3";
+                audioPlayer.currentTime = 0;
             }
+            audioPlayer.play().catch(() => { });
+
+            playScene();
         }
     </script>
 
