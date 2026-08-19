@@ -509,7 +509,7 @@
         let currentStep = 0;
 
         function triggerCenterConfetti() {
-            const duration = 2 * 1000;
+            const duration = 1 * 1000;
             const animationEnd = Date.now() + duration;
 
             const interval = setInterval(function () {
@@ -602,7 +602,7 @@
             <div class="options-grid" style="margin-top: 10px;">
                 <button class="choice-btn party-btn" onclick="triggerCenterConfetti(); playSuccessSound();">احتفل مع العصفور و البلبل باطلاق المفرقعات 🥳🎊</button>
                 <button class="choice-btn" style="background: linear-gradient(145deg, #FFB703, #FB8500); box-shadow: 0 6px 0 #D00000;" onclick="location.reload()">العب اللعبة من جديد 🔄</button>
-                <button class="choice-btn video-btn" onclick="location.href='li.html'">
+                <button class="choice-btn video-btn" onclick="goToVideo()">
     مشاهدة القصة مجدداً 🎬
 </button>
             </div>
