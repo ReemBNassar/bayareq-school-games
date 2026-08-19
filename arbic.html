@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>عالم اللغة العربية 📚✨</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Changa', 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(135deg, #A8EDEA 0%, #FED6E3 50%, #FFD166 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #page-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0f172a;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease-in-out;
+            z-index: 9999;
+        }
+
+        #page-overlay.fade-out-active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .welcome-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 40px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 480px;
+            padding: 30px 20px;
+            text-align: center;
+            border: 6px solid #FF6B6B;
+            position: relative;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: bounceIn 1.2s ease;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.7);
+                opacity: 0;
+            }
+
+            60% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .arabic-logo-container {
+            position: relative;
+            margin: 10px 0 20px 0;
+        }
+
+        .arabic-logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #FFD166, #FF6B6B);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3.5rem;
+            color: white;
+            font-weight: 900;
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+            border: 5px solid #FFF;
+            animation: pulseLogo 2s infinite ease-in-out;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes pulseLogo {
+
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+
+            50% {
+                transform: scale(1.08) rotate(3deg);
+            }
+        }
+
+        .title-badge {
+            background: linear-gradient(45deg, #6C5CE7, #4ECDC4);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            box-shadow: 0 6px 18px rgba(108, 92, 231, 0.3);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #2B2D42;
+            font-weight: 700;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .floating-symbol {
+            position: absolute;
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 10;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
+        }
+
+        .s1 {
+            top: 15px;
+            right: 20px;
+            animation: floatAnim 3s infinite ease-in-out;
+        }
+
+        .s2 {
+            bottom: 20px;
+            left: 20px;
+            animation: floatAnim 2.8s infinite ease-in-out 0.5s;
+        }
+
+        .s3 {
+            top: 50%;
+            right: -15px;
+            animation: floatAnim 3.2s infinite ease-in-out 1s;
+        }
+
+        .s4 {
+            top: 40%;
+            left: -15px;
+            animation: floatAnim 2.5s infinite ease-in-out 0.3s;
+        }
+
+        @keyframes floatAnim {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-12px) rotate(12deg);
+            }
+        }
+
+        /* حاوية الأزرار */
+        .buttons-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            align-items: center;
+            position: relative;
+        }
+
+        /* أزرار على شكل فقاعات وغيوم مموجة */
+        .action-btn {
+            color: white;
+            border: 4px solid #FFFFFF;
+            padding: 18px 28px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 320px;
+            position: relative;
+            text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+            outline: none;
+        }
+
+        /* لمعة أعلى الزر لاعطائه مظهر مجسم 3D */
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 15px;
+            right: 15px;
+            height: 35%;
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 50px 50px 20px 20px;
+            pointer-events: none;
+        }
+
+        /* زر القصة: شكل غيمة/فقاعة غير منتظمة باللون البرتقالي/المشمشي */
+        .story-btn {
+            background: linear-gradient(135deg, #FF5E7E, #FF9966);
+            border-radius: 50px 20px 55px 25px / 25px 55px 20px 50px;
+            box-shadow: 0 10px 0 #D32F2F, 0 15px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.27);
+            z-index: 20;
+        }
+
+        .story-btn:active {
+            transform: scale(var(--story-scale, 1)) translateY(6px) !important;
+            box-shadow: 0 4px 0 #D32F2F, 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* زر اللعبة: شكل كبسولة بيضاوية مموجة باللون الأخضر/التوركواز */
+        .game-btn {
+            background: linear-gradient(135deg, #00F2FE, #4FACFE);
+            border-radius: 25px 60px 20px 55px / 55px 20px 60px 25px;
+            box-shadow: 0 10px 0 #0288D1, 0 15px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .game-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 #0288D1, 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="page-overlay"></div>
+
+    <div class="welcome-card">
+        <div class="floating-symbol s1">🎨</div>
+        <div class="floating-symbol s2">🕊️</div>
+        <div class="floating-symbol s3">✨</div>
+        <div class="floating-symbol s4">🎈</div>
+
+        <div class="title-badge">عَالَمُ اللُّغَةِ الْعَرَبِيَّةِ 📚</div>
+
+        <div class="arabic-logo-container">
+            <div class="arabic-logo">ض</div>
+        </div>
+
+        <p class="subtitle">أَهْلاً بِكُمْ يَا أَبْطَالُ! 👋<br>اخْتَارُوا مَاذَا تُرِيدُونَ أَنْ نَفْعَلَ الْيَوْمَ؟
+        </p>
+
+        <div class="buttons-wrapper">
+            <button class="action-btn story-btn" id="story-btn" onclick="navigateTo('li.html')">
+                <span>مُشَاهَدَةُ الْقِصَّةِ</span> 📖✨
+            </button>
+
+            <button class="action-btn game-btn" onclick="tryGame()">
+                <span>الانْتِقَالُ إِلَى اللَّعِبَةِ</span> 🎮🎈
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentScale = 1;
+
+        function tryGame() {
+            currentScale += 0.22;
+            const storyBtn = document.getElementById("story-btn");
+
+            storyBtn.style.setProperty('--story-scale', currentScale);
+            storyBtn.style.transform = `scale(${currentScale})`;
+        }
+
+        function navigateTo(pageUrl) {
+            const overlay = document.getElementById("page-overlay");
+            overlay.classList.add("fade-out-active");
+
+            setTimeout(() => {
+                window.location.href = pageUrl;
+            }, 1000);
+        }
+    </script>
+
+</body>
+
+</html>
